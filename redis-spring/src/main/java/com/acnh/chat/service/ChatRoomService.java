@@ -4,6 +4,7 @@ import org.redisson.api.RListReactive;
 import org.redisson.api.RTopicReactive;
 import org.redisson.api.RedissonReactiveClient;
 import org.redisson.client.codec.StringCodec;
+import org.redisson.codec.JsonJacksonCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.socket.WebSocketHandler;
@@ -29,7 +30,7 @@ public class ChatRoomService implements WebSocketHandler {
         String room = getChatRoomName(websocketSession);
         RTopicReactive topic = this.client.getTopic(room, StringCodec.INSTANCE);
 
-        RListReactive<String> list = this.client.getList("history:" + room, StringCodec.INSTANCE); // to get history of text for new member
+        RListReactive<String> list = this.client.getList("history:" + room, JsonJacksonCodec.INSTANCE); // to get history of text for new member
         // subscribe
         websocketSession.receive()
                 .map(WebSocketMessage::getPayloadAsText)
